@@ -14,9 +14,13 @@ from PyQt6.QtCore import Qt, QThread, pyqtSignal
 # Palabras clave típicas de imágenes generadas con IA
 # ==============================
 PALABRAS_CLAVE_IA = [
-    "DALL·E", "Midjourney", "Stable Diffusion", "Wombo",
-    "Generative", "AI", "Photoshop Beta", "Dream", "Runway",
-    "CreatorTool=AI", "Generated"
+    "GPT-4o", "OpenAI API", "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia",
+    "c2pa", "Microsoft Responsible AI Image ", "Made with Google AI", "Image Creator from Designer", 
+    "Dream", "Runway", "CreatorTool=AI", "Generated"
+]
+
+PALABRAS_POSIBLES_IA =[
+    "GPT-4o", "Unknown (hand)", "CC0"
 ]
 
 # ==============================
