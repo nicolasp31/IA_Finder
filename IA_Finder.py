@@ -1,4 +1,44 @@
 import sys
+from PyQt6.QtWidgets import (
+    QApplication, 
+)
+from PyQt6.QtGui import  QPalette, QColor  
+from PyQt6.QtCore import Qt
+from Gui import DetectorImagenIA
+
+def main():
+    app = QApplication(sys.argv)
+
+    # Configurar tema oscuro
+    paleta_oscura = QPalette()
+    paleta_oscura.setColor(QPalette.ColorRole.Window, QColor(53, 53, 53))
+    paleta_oscura.setColor(QPalette.ColorRole.WindowText, Qt.GlobalColor.white)
+    paleta_oscura.setColor(QPalette.ColorRole.Base, QColor(35, 35, 35))
+    paleta_oscura.setColor(QPalette.ColorRole.AlternateBase, QColor(53, 53, 53))
+    paleta_oscura.setColor(QPalette.ColorRole.ToolTipBase, Qt.GlobalColor.white)
+    paleta_oscura.setColor(QPalette.ColorRole.ToolTipText, Qt.GlobalColor.white)
+    paleta_oscura.setColor(QPalette.ColorRole.Text, Qt.GlobalColor.white)
+    paleta_oscura.setColor(QPalette.ColorRole.Button, QColor(53, 53, 53))
+    paleta_oscura.setColor(QPalette.ColorRole.ButtonText, Qt.GlobalColor.white)
+    paleta_oscura.setColor(QPalette.ColorRole.BrightText, Qt.GlobalColor.red)
+    paleta_oscura.setColor(QPalette.ColorRole.Highlight, QColor(142, 45, 197))
+    paleta_oscura.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.black)
+    app.setPalette(paleta_oscura)
+    app.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: none; }")
+
+    ventana = DetectorImagenIA()
+    ventana.show()
+
+    sys.exit(app.exec())
+
+if __name__ == "__main__":
+    main()
+
+
+
+"""
+
+import sys
 import subprocess
 import json
 import shutil
@@ -188,55 +228,55 @@ def detectar_aplicacion(metadata):
 # ==============================
 
 def analizar_imagen(ruta_archivo):
-    """
-    Analiza metadata imágenes png, jpg, jpeg con exiftool
-    Retorna metadata y resultado de análisis IA.
-    """
+    
+    #Analiza metadata imágenes png, jpg, jpeg con exiftool
+    #Retorna metadata y resultado de análisis IA.
+  
     metadata = ejecutar_exiftool(ruta_archivo)
     es_ia, mensaje = verificar_archivo_ia(metadata)
     print(mensaje)
     return metadata, es_ia, mensaje
 
 def analizar_video(ruta_archivo):
-    """
-    Analiza metadata videos mp4 con exiftool
-    """
+    
+   # Analiza metadata videos mp4 con exiftool
+    
     metadata = ejecutar_exiftool(ruta_archivo)
     es_ia, mensaje = verificar_archivo_ia(metadata)
     print(mensaje)
     return metadata, es_ia, mensaje
 
 def analizar_docx(ruta_archivo):
-    """
-    Analiza metadata docx con exiftool
-    """
+    
+   # Analiza metadata docx con exiftool
+    
     metadata = ejecutar_exiftool(ruta_archivo)
     es_ia, mensaje = verificar_archivo_ia(metadata)
     print(mensaje)
     return metadata, es_ia, mensaje
 
 def analizar_pdf(ruta_archivo):
-    """
-    Analiza metadata pdf con exiftool
-    """
+    
+   # Analiza metadata pdf con exiftool
+    
     metadata = ejecutar_exiftool(ruta_archivo)
     es_ia, mensaje = verificar_archivo_ia(metadata)
     print(mensaje)
     return metadata, es_ia, mensaje
 
 def analizar_xlsx(ruta_archivo):
-    """
-    Analiza metadata xlsx con exiftool
-    """
+    
+   # Analiza metadata xlsx con exiftool
+    
     metadata = ejecutar_exiftool(ruta_archivo)
     es_ia, mensaje = verificar_archivo_ia(metadata)
     print(mensaje)
     return metadata, es_ia, mensaje
 
 def analizar_pptx(ruta_archivo):
-    """
-    Analiza metadata pptx con exiftool
-    """
+    
+   # Analiza metadata pptx con exiftool
+    
     metadata = ejecutar_exiftool(ruta_archivo)
     es_ia, mensaje = verificar_archivo_ia(metadata)
     print(mensaje)
@@ -510,3 +550,4 @@ if __name__ == "__main__":
     ventana = DetectorImagenIA()
     ventana.show()
     sys.exit(app.exec())
+ """
