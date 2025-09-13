@@ -1,10 +1,7 @@
-# gui.py
-
-
 import os
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton, QFileDialog, QVBoxLayout, QHBoxLayout,
-    QTextEdit, QTableWidget, QTableWidgetItem, QTabWidget, QMenuBar, QProgressBar, QDialog ,  QMessageBox
+    QTextEdit, QTableWidget, QTableWidgetItem, QTabWidget, QMenuBar, QProgressBar, QDialog, QMessageBox
 )
 from PyQt6.QtGui import QFont, QAction
 from PyQt6.QtCore import Qt
@@ -12,7 +9,7 @@ from Worker import HiloMetadata
 from metadata_analisis import verificar_archivo_ia
 
 
-class DetectorArchivoIA(QWidget):
+class DetectorArchivoGUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Detector de archivos generados por IA")
@@ -40,30 +37,25 @@ class DetectorArchivoIA(QWidget):
         layout_derecho.setSpacing(15)
         self.panel_derecho.setLayout(layout_derecho)
         layout_principal.addWidget(self.panel_derecho)
-        # Título de análisis
+        # Elementos iniciales del panel derecho
         self.titulo_analisis = QLabel("Análisis de Archivo")
         self.titulo_analisis.setFont(QFont("Arial", 16, QFont.Weight.Bold))
         layout_derecho.addWidget(self.titulo_analisis, alignment=Qt.AlignmentFlag.AlignLeft)
-        # Barra de progreso
         self.barra_progreso = QProgressBar()
         self.barra_progreso.setMinimum(0)
         self.barra_progreso.setMaximum(100)
         self.barra_progreso.hide()
         layout_derecho.addWidget(self.barra_progreso)
-        # Estado de análisis
         self.estado_analisis = QLabel("Selecciona un archivo para iniciar el análisis")
         self.estado_analisis.setFont(QFont("Arial", 11))
         layout_derecho.addWidget(self.estado_analisis)
-        # Icono resultado
         self.icono_resultado = QLabel()
         self.icono_resultado.setFixedSize(64, 64)
         layout_derecho.addWidget(self.icono_resultado, alignment=Qt.AlignmentFlag.AlignLeft)
-        # Texto resultado
         self.texto_resultado = QLabel("")
         self.texto_resultado.setFont(QFont("Arial", 12))
         self.texto_resultado.setWordWrap(True)
         layout_derecho.addWidget(self.texto_resultado)
-        # Botón ver metadata completa
         self.boton_ver_metadata = QPushButton("< Ver metadata completa")
         self.boton_ver_metadata.setEnabled(False)
         self.boton_ver_metadata.clicked.connect(self.mostrar_metadata_completa)
@@ -73,14 +65,14 @@ class DetectorArchivoIA(QWidget):
         self._ventana_metadata = None  # Para mantener referencia de QDialog
         self.hilo = None  # Hilo de análisis en curso
 
+        # Conectar cambio de pestaña para actualizar panel derecho
+        self.pestanas.currentChanged.connect(self.actualizar_panel_derecho_por_pestana)
+
     def inicializar_menu(self):
         menu_archivo = self.barra_menu.addMenu("Archivo")
 
         accion_abrir = QAction("Abrir archivo", self)
         accion_abrir.triggered.connect(self.seleccionar_archivo)
-
-        accion_abrir_carpeta = QAction("Abrir carpeta", self)
-        accion_abrir_carpeta.triggered.connect(self.seleccionar_carpeta)
 
         accion_exportar = QAction("Exportar reporte", self)
         accion_exportar.triggered.connect(self.exportar_reporte)
@@ -90,19 +82,29 @@ class DetectorArchivoIA(QWidget):
         accion_salir.triggered.connect(QApplication.instance().quit)
 
         menu_archivo.addAction(accion_abrir)
-        menu_archivo.addAction(accion_abrir_carpeta)
         menu_archivo.addSeparator()
         menu_archivo.addAction(accion_exportar)
         menu_archivo.addSeparator()
         menu_archivo.addAction(accion_salir)
 
-        # Menú Escaneo original sin cambio
-        menu_escaneo = self.barra_menu.addMenu("Escaneo")
-        menu_escaneo.addAction("Escaneo rápido")
-        menu_escaneo.addAction("Escaneo profundo")
-        menu_escaneo.addSeparator()
-        menu_escaneo.addAction("Escanear múltiples archivos")
-        menu_escaneo.addAction("Ver resultados recientes")
+        # Menú Acerca de Nosotros
+        menu_acerca = self.barra_menu.addMenu("Acerca de Nosotros")
+
+        accion_ayuda = QAction("Ayuda", self)
+        accion_sobre = QAction("Sobre Detector de IA", self)
+        accion_instalacion = QAction("Instalación", self)
+        accion_como_usar = QAction("Cómo usar", self)
+
+        menu_acerca.addAction(accion_ayuda)
+        menu_acerca.addAction(accion_sobre)
+        menu_acerca.addAction(accion_instalacion)
+        menu_acerca.addAction(accion_como_usar)
+
+        # Conectar las acciones para actualizar panel derecho
+        accion_ayuda.triggered.connect(lambda: self.mostrar_contenido_derecho("ayuda"))
+        accion_sobre.triggered.connect(lambda: self.mostrar_contenido_derecho("sobre"))
+        accion_instalacion.triggered.connect(lambda: self.mostrar_contenido_derecho("instalacion"))
+        accion_como_usar.triggered.connect(lambda: self.mostrar_contenido_derecho("como_usar"))
 
     def inicializar_pestanas(self):
         widget_ia = QWidget()
@@ -125,10 +127,21 @@ class DetectorArchivoIA(QWidget):
         self.tabla_metadata.horizontalHeader().setStretchLastSection(True)
         layout_ia.addWidget(self.tabla_metadata)
         self.pestanas.addTab(widget_ia, "Detector de IA")
-        self.pestanas.addTab(QWidget(), "Archivos")
-        self.pestanas.addTab(QWidget(), "Escaneo")
-        self.pestanas.addTab(QWidget(), "Acerca de")
-        
+
+        widget_reporte = QWidget()
+        layout_reporte = QVBoxLayout()
+        widget_reporte.setLayout(layout_reporte)
+
+        self.boton_abrir_reporte = QPushButton("Abrir reporte")
+        self.boton_abrir_reporte.clicked.connect(self.abrir_reporte)
+        layout_reporte.addWidget(self.boton_abrir_reporte)
+
+        self.texto_reporte = QTextEdit()
+        self.texto_reporte.setReadOnly(True)
+        layout_reporte.addWidget(self.texto_reporte)
+
+        self.pestanas.addTab(widget_reporte, "Abrir reporte")
+
     def aplicar_estilos_menu(self):
         self.barra_menu.setStyleSheet("""
             QMenuBar {
@@ -158,7 +171,68 @@ class DetectorArchivoIA(QWidget):
                 color: #FFD700;
             }
         """)
-        
+
+    def mostrar_contenido_derecho(self, opcion):
+        layout = self.panel_derecho.layout()
+        for i in reversed(range(layout.count())):
+            widget = layout.itemAt(i).widget()
+            if widget is not None:
+                widget.setParent(None)
+
+        textos = {
+            "ayuda": "<h2>Ayuda</h2><p>Aquí puedes encontrar ayuda para usar el detector.</p>",
+            "sobre": "<h2>Sobre Detector de IA</h2><p>Esta aplicación detecta archivos generados mediante Inteligencia Artificial.</p>",
+            "instalacion": "<h2>Instalación</h2><p>Instrucciones para instalar la aplicación.</p>",
+            "como_usar": "<h2>Cómo usar</h2><p>Guía rápida para usar el detector.</p>",
+        }
+        texto = textos.get(opcion, "<p>Seleccione una opción para mostrar información.</p>")
+
+        contenido_html = QTextEdit()
+        contenido_html.setReadOnly(True)
+        contenido_html.setHtml(texto)
+
+        layout.addWidget(contenido_html)
+
+    def actualizar_panel_derecho_por_pestana(self, index):
+        nombre_pestana = self.pestanas.tabText(index)
+        layout = self.panel_derecho.layout()
+
+        # Limpiar siempre el panel derecho
+        for i in reversed(range(layout.count())):
+            widget = layout.itemAt(i).widget()
+            if widget:
+                widget.setParent(None)
+
+        if nombre_pestana == "Detector de IA":
+            layout.addWidget(self.titulo_analisis, alignment=Qt.AlignmentFlag.AlignLeft)
+            layout.addWidget(self.barra_progreso)
+            if self.barra_progreso.isHidden():
+                self.barra_progreso.hide()
+            else:
+                self.barra_progreso.show()
+            layout.addWidget(self.estado_analisis)
+            layout.addWidget(self.icono_resultado, alignment=Qt.AlignmentFlag.AlignLeft)
+            layout.addWidget(self.texto_resultado)
+            layout.addWidget(self.boton_ver_metadata, alignment=Qt.AlignmentFlag.AlignLeft)
+
+        elif nombre_pestana == "Abrir reporte":
+            widget_reporte = QWidget()
+            layout_reporte = QVBoxLayout()
+            widget_reporte.setLayout(layout_reporte)
+
+            btn_abrir = QPushButton("Abrir reporte")
+            btn_abrir.clicked.connect(self.abrir_reporte)
+            layout_reporte.addWidget(btn_abrir)
+
+            self.texto_reporte = QTextEdit()
+            self.texto_reporte.setReadOnly(True)
+            layout_reporte.addWidget(self.texto_reporte)
+
+            layout.addWidget(widget_reporte)
+
+        else:
+            self.mostrar_contenido_derecho(nombre_pestana.lower())
+
     def seleccionar_archivo(self):
         ruta_archivo, _ = QFileDialog.getOpenFileName(
             self,
@@ -183,29 +257,25 @@ class DetectorArchivoIA(QWidget):
         self.metadata_completa = metadata
         self.llenar_tabla_metadata(metadata)
         self.estado_analisis.setText("")
-    
+
         if es_ia is True:
             self.icono_resultado.setText("❌")
             texto = f"<b>Resultado de análisis:</b> Archivo generado por IA<br>"
             texto += f"La aplicación con la que fue generado el archivo fue: {', '.join(aplicacion) if isinstance(aplicacion, list) else aplicacion}<br>"
             texto += f"El modelo de IA usado fue: {modelo if modelo != 'Desconocido' else 'No se pudo determinar el modelo exacto'}<br>"
-        
         elif es_ia is None:
             self.icono_resultado.setText("⚠️")
             texto = f"<b>Resultado de análisis:</b> Posible generación por IA (no confirmado)<br>"
             texto += f"Se cree que el archivo pudo ser generado por: {', '.join(aplicacion) if isinstance(aplicacion, list) else aplicacion}<br>"
             texto += f"Se cree que el modelo de IA usado fue: {modelo if modelo != 'Desconocido' else 'No se pudo determinar el modelo'}<br>"
-        
         else:  # es_ia False
             self.icono_resultado.setText("✅")
             texto = "<b>Resultado de análisis:</b> Archivo genuino<br><b>0% IA detectada</b><br>"
             texto += "No se detectó la aplicación con la que fue generado el archivo<br>"
             texto += "No se encontró modelo de IA generativa<br>"
 
-         # clave para interpretar <br> como salto de línea
         self.texto_resultado.setText(f"{texto}<br>{mensaje}")
         self.boton_ver_metadata.setEnabled(True)
-
 
     def manejar_error(self, error):
         self.barra_progreso.hide()
@@ -223,6 +293,58 @@ class DetectorArchivoIA(QWidget):
             self.tabla_metadata.insertRow(fila)
             self.tabla_metadata.setItem(fila, 0, QTableWidgetItem(campo))
             self.tabla_metadata.setItem(fila, 1, QTableWidgetItem(str(valor)))
+
+    def abrir_reporte(self):
+        ruta_archivo, _ = QFileDialog.getOpenFileName(
+            self,
+            "Selecciona un archivo de reporte",
+            "",
+            "Archivos soportados (*.html *.csv)"
+        )
+        if not ruta_archivo:
+            return
+
+        layout = self.panel_derecho.layout()
+        for i in reversed(range(layout.count())):
+            widget = layout.itemAt(i).widget()
+            if widget is not None:
+                widget.setParent(None)
+
+        try:
+            with open(ruta_archivo, "r", encoding="utf-8") as f:
+                contenido = f.read()
+
+            if ruta_archivo.lower().endswith(".html"):
+                texto_html = QTextEdit()
+                texto_html.setReadOnly(True)
+                texto_html.setHtml(contenido)
+                layout.addWidget(texto_html)
+            else:
+                import csv
+                from io import StringIO
+
+                tabla = QTableWidget()
+                csv_buffer = StringIO(contenido)
+                lector = csv.reader(csv_buffer)
+                filas = list(lector)
+
+                if filas:
+                    tabla.setRowCount(len(filas) - 1)
+                    tabla.setColumnCount(len(filas[0]))
+                    tabla.setHorizontalHeaderLabels(filas[0])
+                    tabla.verticalHeader().setVisible(False)
+                    tabla.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+                    tabla.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
+                    tabla.horizontalHeader().setStretchLastSection(True)
+
+                    for row_idx, row in enumerate(filas[1:]):
+                        for col_idx, valor in enumerate(row):
+                            tabla.setItem(row_idx, col_idx, QTableWidgetItem(valor))
+                layout.addWidget(tabla)
+
+        except Exception as e:
+            QMessageBox.warning(self, "Error", f"No se pudo abrir el archivo:\n{str(e)}")
+
 
     def mostrar_metadata_completa(self):
         if not self.metadata_completa:
@@ -341,22 +463,3 @@ class DetectorArchivoIA(QWidget):
                 f.write(metadata_html)
 
         QMessageBox.information(self, "Éxito", f"Reporte guardado en:\n{ruta_guardar}")
-
-
-""""
-
-    def mostrar_metadata_completa(self):
-        if self.metadata_completa:
-            from pprint import pformat
-            metadata_str = pformat(self.metadata_completa, indent=2, width=80)
-            self._ventana_metadata = QDialog(self)
-            self._ventana_metadata.setWindowTitle("Metadata completa")
-            self._ventana_metadata.setFixedSize(800, 600)
-            layout = QVBoxLayout()
-            txt = QTextEdit()
-            txt.setPlainText(metadata_str)
-            txt.setReadOnly(True)
-            layout.addWidget(txt)
-            self._ventana_metadata.setLayout(layout)
-            self._ventana_metadata.exec()
-"""

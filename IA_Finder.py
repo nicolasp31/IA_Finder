@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import  QPalette, QColor  
 from PyQt6.QtCore import Qt
-from Gui import DetectorArchivoIA
+from Gui import DetectorArchivoGUI
 
 def main():
     app = QApplication(sys.argv)
@@ -26,7 +26,7 @@ def main():
     app.setPalette(paleta_oscura)
     app.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: none; }")
 
-    ventana = DetectorArchivoIA()
+    ventana = DetectorArchivoGUI()
     ventana.show()
 
     sys.exit(app.exec())
