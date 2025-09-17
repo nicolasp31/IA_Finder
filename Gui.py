@@ -393,12 +393,6 @@ class DetectorArchivoGUI(QWidget):
         self._ventana_metadata.setLayout(layout)
         self._ventana_metadata.exec()
 
-    def seleccionar_carpeta(self):
-        ruta_carpeta = QFileDialog.getExistingDirectory(self, "Selecciona una carpeta")
-        if ruta_carpeta:
-            # Aquí puedes implementar la lógica para buscar y analizar archivos dentro de la carpeta
-            QMessageBox.information(self, "Carpeta seleccionada", f"Carpeta seleccionada:\n{ruta_carpeta}")
-        # Ejemplo: recorrer archivos y analizar uno a uno o mostrar una lista
 
     def exportar_reporte(self):
         if not self.metadata_completa:
