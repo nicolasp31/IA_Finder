@@ -1,15 +1,14 @@
 import sys
-from PyQt6.QtWidgets import (
-    QApplication, 
-)
-from PyQt6.QtGui import  QPalette, QColor  
-from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtGui import QPalette, QColor
+from PyQt6.QtCore import Qt, QTimer
 from Gui import DetectorArchivoGUI
+from pantalla_carga import pantallaCarga  # <-- Asumiendo que defines el splash en Splash.py, o pones aquí la clase
 
 def main():
     app = QApplication(sys.argv)
 
-    # Configurar tema oscuro
+    # Tema oscuro
     paleta_oscura = QPalette()
     paleta_oscura.setColor(QPalette.ColorRole.Window, QColor(53, 53, 53))
     paleta_oscura.setColor(QPalette.ColorRole.WindowText, Qt.GlobalColor.white)
@@ -26,14 +25,19 @@ def main():
     app.setPalette(paleta_oscura)
     app.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: none; }")
 
-    ventana = DetectorArchivoGUI()
-    ventana.show()
+    # Mostrar pantalla de carga
+    Carga = pantallaCarga()
+    Carga.show()
+
+    # Mostrar ventana principal después del splash
+    def lanzar_principal():
+        ventana = DetectorArchivoGUI()
+        ventana.show()
+        Carga.close()
+
+    QTimer.singleShot(2200, lanzar_principal)  # Tiempo de splash en milisegundos
 
     sys.exit(app.exec())
 
 if __name__ == "__main__":
     main()
-
-
-
-
