@@ -28,11 +28,13 @@ def main():
     # Mostrar pantalla de carga
     Carga = pantallaCarga()
     Carga.show()
+    Carga.showMaximized()
+    app.processEvents() 
 
     # Mostrar ventana principal después del splash
     def lanzar_principal():
         ventana = DetectorArchivoGUI()
-        ventana.show()
+        ventana.showMaximized()
         Carga.close()
 
     QTimer.singleShot(2200, lanzar_principal)  # Tiempo de splash en milisegundos

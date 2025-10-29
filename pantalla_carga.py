@@ -5,9 +5,9 @@ from PyQt6.QtCore import Qt, QTimer
 class pantallaCarga(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
-        self.setFixedSize(900, 680)
-        self.setStyleSheet("background-color: #222;")  # Fondo gris oscuro
+        # Quitar: Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint
+        self.setMinimumSize(900, 680)
+        self.setStyleSheet("background-color: #222222;") # Fondo gris oscuro
 
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -62,6 +62,7 @@ class pantallaCarga(QWidget):
 def mostrar_pantallaCarga(app, tiempo=2000):
     splash = pantallaCarga()
     splash.show()
+    splash.showMaximized()
+    app.processEvents()
     QTimer.singleShot(tiempo, splash.close)
     return splash
-

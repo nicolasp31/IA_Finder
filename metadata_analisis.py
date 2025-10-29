@@ -26,7 +26,6 @@ def verificar_archivo_ia(metadata):
     coincidencias = []
     etiquetas_detectadas = set()
 
-    # Buscar en lista principal PALABRAS_CLAVE_IA
     for clave, valor in metadata.items():
         if clave in etiquetas_excluidas:
             continue
@@ -39,8 +38,9 @@ def verificar_archivo_ia(metadata):
                 coincidencias.append(f"Patrón detectado en '{clave}': {valor}")
                 etiquetas_detectadas.add(clave)
                 break
-        if len(coincidencias) >= 3:
-            break
+        # Quitar la limitacion de 3 patrones
+        # if len(coincidencias) >= 3:
+        #     break
 
     if coincidencias:
         mensaje = "\n".join(coincidencias)
@@ -70,9 +70,9 @@ def verificar_archivo_ia(metadata):
                     coincidencias_posibles.append(f"Patrón numérico o fecha sospechosa en '{clave}': {valor}")
                     etiquetas_detectadas.add(clave)
                     break
-
-        if len(coincidencias_posibles) >= 3:
-            break
+        # Quitar la limitacion de 3 patrones
+        # if len(coincidencias_posibles) >= 3:
+        #     break
 
     if coincidencias_posibles:
         mensaje = "\n".join(coincidencias_posibles)

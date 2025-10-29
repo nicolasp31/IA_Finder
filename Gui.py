@@ -15,7 +15,7 @@ class DetectorArchivoGUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Detector de archivos generados por IA")
-        self.setFixedSize(1000, 680)
+        self.setMinimumSize(900, 680)
         # Layout principal horizontal
         layout_principal = QHBoxLayout()
         # Menú superior
@@ -326,6 +326,9 @@ class DetectorArchivoGUI(QWidget):
         self.metadata_completa = metadata
         self.llenar_tabla_metadata(metadata)
         self.estado_analisis.setText("")
+        
+        lineas = mensaje.split('\n') if mensaje else []
+        resumen_3 = "\n".join(lineas[:3]) if len(lineas) > 3 else mensaje
 
         if es_ia is True:
             self.icono_resultado.setText("❌")
@@ -343,7 +346,7 @@ class DetectorArchivoGUI(QWidget):
             texto += "No se detectó la aplicación con la que fue generado el archivo<br>"
             texto += "No se encontró modelo de IA generativa<br>"
 
-        self.texto_resultado.setText(f"{texto}<br>{mensaje}")
+        self.texto_resultado.setText(f"{texto}<br>{resumen_3}")
         self.boton_ver_metadata.setEnabled(True)
 
     def manejar_error(self, error):
@@ -419,27 +422,23 @@ class DetectorArchivoGUI(QWidget):
         if not self.metadata_completa:
             return
 
-        # Detectar patrones usando tu función
+        # Detectar patrones usando la función
         es_ia, mensaje = verificar_archivo_ia(self.metadata_completa)
 
-        # Extraer claves de patrones detectados (máx 3)
+        # Extraer todas las claves detectadas dentro del mensaje (sin límite)
         claves_resaltadas = set()
         if mensaje and es_ia is not False:
             for linea in mensaje.split('\n'):
-                # Extrae el nombre del campo entre comillas simples
                 inicio = linea.find("'") + 1
                 fin = linea.find("'", inicio)
                 if inicio > 0 and fin > inicio:
                     clave = linea[inicio:fin]
                     claves_resaltadas.add(clave)
-                if len(claves_resaltadas) >= 3:
-                    break
 
         # Generar la metadata en HTML con numeración y resaltado
         rows = []
         for idx, (k, v) in enumerate(self.metadata_completa.items(), start=1):
             if k in claves_resaltadas:
-                # Resaltado: negrita y color rojo
                 fila = f"<tr><td><b style='color:red;'>{idx}. {k}</b></td><td><b style='color:red;'>{v}</b></td></tr>"
             else:
                 fila = f"<tr><td>{idx}. {k}</td><td>{v}</td></tr>"
@@ -463,12 +462,13 @@ class DetectorArchivoGUI(QWidget):
         self._ventana_metadata.exec()
 
 
+
     def exportar_reporte(self):
         if not self.metadata_completa:
             QMessageBox.warning(self, "Atención", "No hay metadata para exportar.")
             return
 
-        # Detectar patrones usando la función existente
+        # Usar función que busca todos los patrones sin límite
         es_ia, mensaje = verificar_archivo_ia(self.metadata_completa)
 
         claves_resaltadas = set()
@@ -479,8 +479,6 @@ class DetectorArchivoGUI(QWidget):
                 if inicio > 0 and fin > inicio:
                     clave = linea[inicio:fin]
                     claves_resaltadas.add(clave)
-                if len(claves_resaltadas) >= 3:
-                    break
 
         # Preguntar ruta y tipo de archivo para guardar
         ruta_guardar, filtro = QFileDialog.getSaveFileName(
