@@ -1,5 +1,4 @@
-import sys
-from PyQt6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QHBoxLayout, QGraphicsDropShadowEffect
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget, QHBoxLayout, QGraphicsDropShadowEffect
 from PyQt6.QtGui import QPixmap, QFont, QColor
 from PyQt6.QtCore import Qt, QTimer
 
@@ -7,19 +6,19 @@ class pantallaCarga(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
-        self.setFixedSize(600, 400)
+        self.setFixedSize(900, 680)
         self.setStyleSheet("background-color: #222;")  # Fondo gris oscuro
 
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Mensaje principal con sombra y color verde claro
-        bienvenida = QLabel("IA FINDER")
+        bienvenida = QLabel("DETECTOR DE IA")
         bienvenida.setFont(QFont("Arial", 72, QFont.Weight.Bold))
         bienvenida.setAlignment(Qt.AlignmentFlag.AlignCenter)
         bienvenida.setStyleSheet("""
             color: #60FF9F;
-            letter-spacing: 3px;
+            letter-spacing: 1px;
         """)
         sombra1 = QGraphicsDropShadowEffect()
         sombra1.setColor(QColor(30,30,30))
@@ -35,7 +34,7 @@ class pantallaCarga(QWidget):
         sub_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Mensaje pequeño en blanco, con sombra ligera
-        powered = QLabel("Powered by EXIFTOOL by Phil Harvey")
+        powered = QLabel("Desarrolado con EXIFTOOL by Phil Harvey")
         powered.setFont(QFont("Arial", 12, QFont.Weight.Bold))
         powered.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         powered.setStyleSheet("color: #fff; letter-spacing: 1px;")

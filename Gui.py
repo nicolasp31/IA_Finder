@@ -1,4 +1,6 @@
 import os
+import subprocess
+import platform
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton, QFileDialog, QVBoxLayout, QHBoxLayout,
     QTextEdit, QTableWidget, QTableWidgetItem, QTabWidget, QMenuBar, QProgressBar, QDialog, QMessageBox
@@ -71,8 +73,12 @@ class DetectorArchivoGUI(QWidget):
     def inicializar_menu(self):
         menu_archivo = self.barra_menu.addMenu("Archivo")
 
+
         accion_abrir = QAction("Abrir archivo", self)
         accion_abrir.triggered.connect(self.seleccionar_archivo)
+
+        accion_abrir_reporte = QAction("Abrir reporte", self)  # nuevo
+        accion_abrir_reporte.triggered.connect(self.abrir_reporte)
 
         accion_exportar = QAction("Exportar reporte", self)
         accion_exportar.triggered.connect(self.exportar_reporte)
@@ -82,6 +88,8 @@ class DetectorArchivoGUI(QWidget):
         accion_salir.triggered.connect(QApplication.instance().quit)
 
         menu_archivo.addAction(accion_abrir)
+        menu_archivo.addSeparator()
+        menu_archivo.addAction(accion_abrir_reporte) 
         menu_archivo.addSeparator()
         menu_archivo.addAction(accion_exportar)
         menu_archivo.addSeparator()
@@ -115,6 +123,9 @@ class DetectorArchivoGUI(QWidget):
         self.boton_seleccionar = QPushButton("Seleccionar archivo")
         self.boton_seleccionar.clicked.connect(self.seleccionar_archivo)
         layout_ia.addWidget(self.boton_seleccionar)
+        self.boton_exportar_reporte = QPushButton("Exportar reporte")
+        self.boton_exportar_reporte.clicked.connect(self.exportar_reporte)
+        layout_ia.addWidget(self.boton_exportar_reporte)
         etiqueta_metadata = QLabel("Metadata extraída")
         etiqueta_metadata.setFont(QFont("Arial", 11, QFont.Weight.Bold))
         layout_ia.addWidget(etiqueta_metadata)
@@ -139,8 +150,9 @@ class DetectorArchivoGUI(QWidget):
         self.texto_reporte = QTextEdit()
         self.texto_reporte.setReadOnly(True)
         layout_reporte.addWidget(self.texto_reporte)
-
         self.pestanas.addTab(widget_reporte, "Abrir reporte")
+        
+
 
     def aplicar_estilos_menu(self):
         self.barra_menu.setStyleSheet("""
@@ -179,19 +191,76 @@ class DetectorArchivoGUI(QWidget):
             if widget is not None:
                 widget.setParent(None)
 
+        if opcion == "como_usar":
+            # Ruta al manual PDF
+            ruta_pdf = os.path.abspath("Manual_Usuario.pdf")  # Cambia por ruta correcta
+            if platform.system() == "Windows":
+                os.startfile(ruta_pdf)
+            elif platform.system() == "Darwin":  # macOS
+                subprocess.run(["open", ruta_pdf])
+            else:  # Linux y otros
+                subprocess.run(["xdg-open", ruta_pdf])
+            return
+
         textos = {
-            "ayuda": "<h2>Ayuda</h2><p>Aquí puedes encontrar ayuda para usar el detector.</p>",
-            "sobre": "<h2>Sobre Detector de IA</h2><p>Esta aplicación detecta archivos generados mediante Inteligencia Artificial.</p>",
-            "instalacion": "<h2>Instalación</h2><p>Instrucciones para instalar la aplicación.</p>",
-            "como_usar": "<h2>Cómo usar</h2><p>Guía rápida para usar el detector.</p>",
+            "ayuda": """
+                <h2>Ayuda</h2>
+                <p>Esta herramienta te permite analizar si un archivo ha sido generado por inteligencia artificial (IA) mediante el análisis de su metadata.</p>
+                <ul>
+                <li><b>Selecciona un archivo</b> compatible, como imágenes, documentos o videos, usando el botón "Seleccionar archivo".</li>
+                <li>El sistema extraerá automáticamente la metadata y evaluará la probabilidad de generación por IA.</li>
+                <li>En la sección de resultados, podrás ver un resumen claro con el resultado del análisis y detalles del modelo o aplicación detectada.</li>
+                <li>Utiliza el botón <b>"Ver metadata completa"</b> para explorar todos los datos extraídos del archivo.</li>
+                <li>Puedes exportar un reporte completo en formatos HTML o CSV para revisar o compartir los resultados.</li>
+                <li>Para abrir reportes guardados, usa la pestaña "Abrir reporte".</li>
+                <li>Si presentas problemas, accede a la sección "Cómo usar" para abrir el manual de usuario completo o "Instalación" si tienes problemas con el funcionamiento dle aplicativo en el menú "Acerca de Nosotros".</li>
+                <li>Esta aplicación es ideal para educadores, investigadores y profesionales que necesitan verificar la autenticidad del contenido digital.</li>
+                </ul>
+                <li><b>Si tienes cualquier otra duda contactate con nuestros desarrolladores:<b></li>
+                <li>dfelipevenegas@ucundinamarca.edu.co | nicolasprieto@ucundinamarca.edu.co</li>
+            """,
+            "sobre": """
+                <h2>Sobre Detector de IA</h2>
+                <p>La aplicación Detector de IA es una herramienta desarrollada en Python utilizando las librerías Exiftool y Flet. Inicialmente fue implementada en un contenedor Docker para garantizar compatibilidad en cualquier sistema operativo; sin embargo, actualmente se distribuye como un archivo ejecutable (.exe), lo que elimina la necesidad de instalar Docker o entornos adicionales.</p>
+                <p>Su propósito es analizar la metadata de diversos tipos de archivos digitales y determinar si estos fueron generados o manipulados por sistemas de Inteligencia Artificial (IA). Este software contribuye a la verificación de autenticidad de documentos y materiales digitales en entornos académicos e investigativos.</p>
+                <p>Ha sido desarrollado en el semillero UPS de la Universidad de Cundinamarca por Daniel Felipe Venegas Vargas y Nicolas Prieto. El objetivo principal es detectar patrones de IA en archivos buscando evidencias de ser generados por IA, siendo útil en la verificación de autenticidad de archivos, así como trabajos de investigación en torno a metadatos.</p>
+                <p>Además, es una herramienta de fácil mantenimiento, de uso libre y código abierto con el propósito de fortalecer la investigación de patrones de metadatos en archivos generados por IA y la democratización de herramientas de este tipo.</p>
+            """,
+            "instalacion": """
+            <h2>Instalación</h2>
+                <p>Para instalar IA Finder, sigue estos pasos:</p>
+                <ol>
+                <li>Descarga el archivo ejecutable de IA Finder desde la página oficial o proveedor confiable.</li>
+                <li>Guárdalo en una carpeta de tu preferencia.</li>
+                <li>Ejecuta el programa haciendo doble clic sobre el archivo .exe.</li>
+                <li>Espera unos segundos mientras se inicia la interfaz de usuario.</li>
+                <li>Se abrirá en una ventana con el título 'Detector de archivos generados por IA'.</li>
+                </ol>
+                <h3>Requisitos del sistema</h3>
+                <ul>
+                <li>Sistema operativo: Windows 10 o superior.</li>
+                <li>IA Finder ejecutable (.exe).</li>
+                <li>No requiere instalación de Docker Desktop ni dependencias externas adicionales.</li>
+                <li>Permisos de lectura sobre los archivos a analizar.</li>
+                </ul>
+                <h3>¿No puedes usar IA Finder?</h3>
+                <p>Existe una versión alternativa:</p>
+                <ul>
+                <li>Descarga <a href="https://example.com/DetectorDeIA_Libre" target="_blank">DetectorDeIA_Libre</a>.</li>
+                <li>Descarga e instala correctamente Exiftool en tu sistema operativo, siguiendo las instrucciones en <a href="https://exiftool.org/install.html" target="_blank">https://exiftool.org/install.html</a>.</li>
+                <li>Ejecuta el archivo con doble clic.</li>
+                <li>Sigue las instrucciones del manual para aprender sobre todas las funciones.</li>
+                </ul>
+            """,
+            
         }
         texto = textos.get(opcion, "<p>Seleccione una opción para mostrar información.</p>")
 
         contenido_html = QTextEdit()
         contenido_html.setReadOnly(True)
         contenido_html.setHtml(texto)
-
         layout.addWidget(contenido_html)
+
 
     def actualizar_panel_derecho_por_pestana(self, index):
         nombre_pestana = self.pestanas.tabText(index)
