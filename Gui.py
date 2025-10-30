@@ -101,7 +101,7 @@ class DetectorArchivoGUI(QWidget):
         accion_ayuda = QAction("Ayuda", self)
         accion_sobre = QAction("Sobre Detector de IA", self)
         accion_instalacion = QAction("Instalación", self)
-        accion_como_usar = QAction("Cómo usar", self)
+        accion_como_usar = QAction("¿Cómo usar?", self)
 
         menu_acerca.addAction(accion_ayuda)
         menu_acerca.addAction(accion_sobre)
@@ -340,7 +340,7 @@ class DetectorArchivoGUI(QWidget):
             texto = f"<b>Resultado de análisis:</b> Posible generación por IA (no confirmado)<br>"
             texto += f"Se cree que el archivo pudo ser generado por: {', '.join(aplicacion) if isinstance(aplicacion, list) else aplicacion}<br>"
             texto += f"Se cree que el modelo de IA usado fue: {modelo if modelo != 'Desconocido' else 'No se pudo determinar el modelo'}<br>"
-        else:  # es_ia False
+        else: 
             self.icono_resultado.setText("✅")
             texto = "<b>Resultado de análisis:</b> Archivo genuino<br><b>0% IA detectada</b><br>"
             texto += "No se detectó la aplicación con la que fue generado el archivo<br>"
@@ -488,7 +488,7 @@ class DetectorArchivoGUI(QWidget):
             "Archivo HTML (*.html);;Archivo CSV (*.csv)"
         )
         if not ruta_guardar:
-            return  # Canceló la acción
+            return  
 
         if filtro == "Archivo CSV (*.csv)" or ruta_guardar.lower().endswith(".csv"):
             # Guardar como CSV
