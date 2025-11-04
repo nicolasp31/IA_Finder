@@ -193,7 +193,7 @@ class DetectorArchivoGUI(QWidget):
 
         if opcion == "como_usar":
             # Ruta al manual PDF
-            ruta_pdf = os.path.abspath("Manual_Usuario.pdf")  # Cambia por ruta correcta
+            ruta_pdf = os.path.abspath("Manual_Usuario.pdf") 
             if platform.system() == "Windows":
                 os.startfile(ruta_pdf)
             elif platform.system() == "Darwin":  # macOS
