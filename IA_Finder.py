@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QApplication
 from PyQt6.QtGui import QPalette, QColor
 from PyQt6.QtCore import Qt, QTimer
 from Gui import DetectorArchivoGUI
-from pantalla_carga import pantallaCarga  # <-- Asumiendo que defines el splash en Splash.py, o pones aquí la clase
+from pantalla_carga import pantallaCarga  
 
 def main():
     app = QApplication(sys.argv)

@@ -1,13 +1,66 @@
 # metadata_analisis.py
-
+import sys
+import os
 import subprocess
 import json
-import shutil
+#import shutil
+from typing import Any
 from datetime import datetime
 from config import (
     etiquetas_excluidas, PALABRAS_CLAVE_IA, PALABRAS_POSIBLES_IA, NUMEROS_FECHAS_CLAVE,
     ETIQUETAS_MODELO, ETIQUETAS_APLICACION, ETIQUETAS_POSIBLE_APLICACION
 )
+
+
+def obtener_ruta_exiftool() -> str:
+    #Devuelve la ruta absoluta del ejecutable exiftool.exe
+    nombre_exec = "exiftool.exe"
+
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(os.path.dirname(__file__))
+
+    ruta_exiftool = os.path.join(base_path, "exiftool", nombre_exec)
+
+    if not os.path.isfile(ruta_exiftool):
+        raise FileNotFoundError(f"ExifTool no encontrado en: {ruta_exiftool}")
+
+    return ruta_exiftool
+
+def ejecutar_exiftool(ruta_archivo: str) -> dict[str, Any]:
+    #Ejecuta ExifTool sobre un archivo y devuelve los metadatos como diccionario.
+    #Usa la variable EXIFTOOL_HOME para asegurar que funcione el entorno
+    ruta_exiftool = obtener_ruta_exiftool()
+    exiftool_dir = os.path.dirname(ruta_exiftool)
+
+    #se asegura que ExifTool encuentre su carpeta exiftool_files
+    env = os.environ.copy()
+    env["EXIFTOOL_HOME"] = exiftool_dir
+
+    try:
+        resultado = subprocess.run(
+            [ruta_exiftool, "-json", ruta_archivo],
+            capture_output=True,
+            text=True,
+            check=True,
+            env=env  # Aplica el entorno
+        )
+
+        metadata_lista = json.loads(resultado.stdout)
+        if metadata_lista:
+            return metadata_lista[0]
+        else:
+            return {}
+
+    except subprocess.CalledProcessError as e:
+        print("Error ejecutando ExifTool:", e)
+        print("STDOUT:", e.stdout)
+        print("STDERR:", e.stderr)
+        raise RuntimeError(
+            f"Error al ejecutar ExifTool sobre '{ruta_archivo}'. "
+            f"STDERR: {e.stderr.strip()}"
+        )
 
 def es_fecha(val):
     formatos = ["%Y:%m:%d %H:%M:%S", "%Y-%m-%d", "%Y:%m:%d"]
@@ -105,18 +158,7 @@ def detectar_aplicacion(metadata):
     else:
         return list(aplicaciones_posibles)
 
-def ejecutar_exiftool(ruta_archivo):
-    if shutil.which("exiftool") is None:
-        raise FileNotFoundError("ExifTool no está instalado o no se encuentra en el PATH del sistema.")
-    resultado = subprocess.run(
-        ["exiftool", "-json", ruta_archivo],
-        capture_output=True, text=True, check=True
-    )
-    metadata_lista = json.loads(resultado.stdout)
-    if metadata_lista:
-        return metadata_lista[0]
-    else:
-        return {}
+
 
 def analizar_imagen(ruta_archivo):
     metadata = ejecutar_exiftool(ruta_archivo)
