@@ -67,7 +67,7 @@
  [],
  False,
  False,
- 1762897680,
+ 1762899506,
  [('runw.exe',
    'C:\\Users\\Daniel\\IA_FINDER\\IA_Finder\\venv\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\runw.exe',
    'EXECUTABLE')],

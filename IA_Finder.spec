@@ -13,7 +13,7 @@ a = Analysis(
         ('config.py', '.'),
         ('metadata_analisis.py', '.'),
         ('pantalla_carga.py', '.'),
-        ('exiftool.png', '.'),
+        ('exiftool.ico', '.'),
         ('Manual_Usuario.pdf', '.'),
         ('Worker.py', '.'),
     ],
@@ -48,7 +48,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    
 )
 
 
@@ -65,5 +64,6 @@ exe = EXE(
     strip=False,
     upx=True,
     console=False,
-    onefile=True,  
+    onefile=True, 
+    icon="exiftool.ico", 
 )
