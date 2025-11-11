@@ -1,6 +1,6 @@
-('C:\\Users\\usuario\\Desktop\\IA_Finder-v0.1\\build\\IA_Finder\\PYZ-00.pyz',
+('C:\\Users\\Daniel\\IA_FINDER\\IA_Finder\\build\\IA_Finder\\PYZ-00.pyz',
  [('PyQt6',
-   'C:\\Users\\usuario\\Desktop\\IA_Finder-v0.1\\venv\\Lib\\site-packages\\PyQt6\\__init__.py',
+   'C:\\Users\\Daniel\\IA_FINDER\\IA_Finder\\venv\\Lib\\site-packages\\PyQt6\\__init__.py',
    'PYMODULE'),
   ('__future__',
    'C:\\Program '
@@ -39,10 +39,10 @@
    'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\\Lib\\_pydecimal.py',
    'PYMODULE'),
   ('_pyi_rth_utils',
-   'C:\\Users\\usuario\\Desktop\\IA_Finder-v0.1\\venv\\Lib\\site-packages\\PyInstaller\\fake-modules\\_pyi_rth_utils\\__init__.py',
+   'C:\\Users\\Daniel\\IA_FINDER\\IA_Finder\\venv\\Lib\\site-packages\\PyInstaller\\fake-modules\\_pyi_rth_utils\\__init__.py',
    'PYMODULE'),
   ('_pyi_rth_utils.qt',
-   'C:\\Users\\usuario\\Desktop\\IA_Finder-v0.1\\venv\\Lib\\site-packages\\PyInstaller\\fake-modules\\_pyi_rth_utils\\qt.py',
+   'C:\\Users\\Daniel\\IA_FINDER\\IA_Finder\\venv\\Lib\\site-packages\\PyInstaller\\fake-modules\\_pyi_rth_utils\\qt.py',
    'PYMODULE'),
   ('_strptime',
    'C:\\Program '

@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 import platform
 from PyQt6.QtWidgets import (
@@ -192,15 +193,31 @@ class DetectorArchivoGUI(QWidget):
                 widget.setParent(None)
 
         if opcion == "como_usar":
-            # Ruta al manual PDF
-            ruta_pdf = os.path.abspath("Manual_Usuario.pdf") 
-            if platform.system() == "Windows":
-                os.startfile(ruta_pdf)
-            elif platform.system() == "Darwin":  # macOS
-                subprocess.run(["open", ruta_pdf])
-            else:  # Linux y otros
-                subprocess.run(["xdg-open", ruta_pdf])
-            return
+            try:
+            # Detectar si se ejecuta empaquetado con PyInstaller
+                if hasattr(sys, "_MEIPASS"):
+                    base_path = sys._MEIPASS  # Carpeta temporal del ejecutable
+                else:
+                    base_path = os.path.abspath(".")
+
+            # Construir ruta al manual PDF
+                ruta_pdf = os.path.join(base_path, "Manual_Usuario.pdf")
+
+            # Comprobar existencia
+                if not os.path.exists(ruta_pdf):
+                    print(f"No se encontró el manual en: {ruta_pdf}")
+                    return
+
+            # Abrir el PDF según el sistema operativo
+                if platform.system() == "Windows":
+                    os.startfile(ruta_pdf)
+                elif platform.system() == "Darwin":  # macOS
+                    subprocess.run(["open", ruta_pdf])
+                else:  # Linux y otros
+                    subprocess.run(["xdg-open", ruta_pdf])
+
+            except Exception as e:
+                print(f"Error al abrir el manual: {e}")
 
         textos = {
             "ayuda": """
@@ -221,8 +238,8 @@ class DetectorArchivoGUI(QWidget):
             """,
             "sobre": """
                 <h2>Sobre Detector de IA</h2>
-                <p>La aplicación Detector de IA es una herramienta desarrollada en Python utilizando las librerías Exiftool y Flet. Inicialmente fue implementada en un contenedor Docker para garantizar compatibilidad en cualquier sistema operativo; sin embargo, actualmente se distribuye como un archivo ejecutable (.exe), lo que elimina la necesidad de instalar Docker o entornos adicionales.</p>
-                <p>Su propósito es analizar la metadata de diversos tipos de archivos digitales y determinar si estos fueron generados o manipulados por sistemas de Inteligencia Artificial (IA). Este software contribuye a la verificación de autenticidad de documentos y materiales digitales en entornos académicos e investigativos.</p>
+                <p>La aplicación IA Finder es una herramienta desarrollada en Python utilizando las librerías Exiftool y PyQt6. Su propósito es analizar la metadata de diversos tipos de archivos digitales y determinar si estos fueron generados o manipulados por sistemas de Inteligencia Artificial (IA). Este software contribuye a la verificación de autenticidad de documentos y materiales digitales en entornos académicos e investigativos.</p>
+
                 <p>Ha sido desarrollado en el semillero UPS de la Universidad de Cundinamarca por Daniel Felipe Venegas Vargas y Nicolas Prieto. El objetivo principal es detectar patrones de IA en archivos buscando evidencias de ser generados por IA, siendo útil en la verificación de autenticidad de archivos, así como trabajos de investigación en torno a metadatos.</p>
                 <p>Además, es una herramienta de fácil mantenimiento, de uso libre y código abierto con el propósito de fortalecer la investigación de patrones de metadatos en archivos generados por IA y la democratización de herramientas de este tipo.</p>
             """,

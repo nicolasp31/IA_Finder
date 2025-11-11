@@ -44,7 +44,7 @@ def ejecutar_exiftool(ruta_archivo: str) -> dict[str, Any]:
             capture_output=True,
             text=True,
             check=True,
-            env=env  # Aplica el entorno
+            env=env  
         )
 
         metadata_lista = json.loads(resultado.stdout)

@@ -14,12 +14,13 @@ a = Analysis(
         ('metadata_analisis.py', '.'),
         ('pantalla_carga.py', '.'),
         ('exiftool.png', '.'),
+        ('Manual_Usuario.pdf', '.'),
         ('Worker.py', '.'),
     ],
     hiddenimports=[
         'Gui', 'config', 'metadata_analisis', 'pantalla_carga', 'Worker',
         'PyQt6', 'PyQt6.QtCore', 'PyQt6.QtGui', 'PyQt6.QtWidgets',
-        'platform', 'json', 'subprocess', 'os', 'sys'
+        'platform', 'json', 'subprocess', 'os', 'sys', 
     ],
     hookspath=[],
     hooksconfig={},
