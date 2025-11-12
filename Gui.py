@@ -97,7 +97,7 @@ class DetectorArchivoGUI(QWidget):
         menu_archivo.addAction(accion_salir)
 
         # Menú Acerca de Nosotros
-        menu_acerca = self.barra_menu.addMenu("Acerca de Nosotros")
+        menu_acerca = self.barra_menu.addMenu("Ayuda e información")
 
         accion_ayuda = QAction("Ayuda", self)
         accion_sobre = QAction("Sobre Detector de IA", self)
