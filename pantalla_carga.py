@@ -1,7 +1,5 @@
 import os
 import sys
-import platform
-import subprocess
 from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget, QHBoxLayout, QGraphicsDropShadowEffect
 from PyQt6.QtGui import QPixmap, QFont, QColor
 from PyQt6.QtCore import Qt, QTimer
