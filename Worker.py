@@ -3,8 +3,10 @@
 from PyQt6.QtCore import QThread, pyqtSignal
 from metadata_analisis import analizar_metadata_por_tipo, detectar_aplicacion, detectar_modelo
 
+# esta clase permite la ejecucion del analisis en un hilo separado al hilo de la interfaz grafica
 class HiloMetadata(QThread):
     progreso = pyqtSignal(int)
+    # valores entregados por el modulo metadata_analisis
     terminado = pyqtSignal(dict, object, str, object, object)  # metadata, es_ia, mensaje, aplicacion, modelo
     error = pyqtSignal(Exception)
 
@@ -12,6 +14,7 @@ class HiloMetadata(QThread):
         super().__init__()
         self.ruta_archivo = ruta_archivo
 
+    # manejo de errores e interfaz
     def run(self):
         try:
             self.progreso.emit(10)

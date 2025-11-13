@@ -62,23 +62,12 @@ def ejecutar_exiftool(ruta_archivo: str) -> dict[str, Any]:
             f"STDERR: {e.stderr.strip()}"
         )
 
-def es_fecha(val):
-    formatos = ["%Y:%m:%d %H:%M:%S", "%Y-%m-%d", "%Y:%m:%d"]
-    for fmt in formatos:
-        try:
-            datetime.strptime(val, fmt)
-            return True
-        except:
-            continue
-    return False
-
-def contiene_numero(val):
-    return any(c.isdigit() for c in val)
-
+# funcion para verificar si un archivo fue generado por ia
 def verificar_archivo_ia(metadata):
     coincidencias = []
     etiquetas_detectadas = set()
 
+    #buscar etiquetas de confirmacion
     for clave, valor in metadata.items():
         if clave in etiquetas_excluidas:
             continue
@@ -96,9 +85,11 @@ def verificar_archivo_ia(metadata):
         mensaje = "\n".join(coincidencias)
         return True, mensaje
 
+    #reiniciar los contenedores
     coincidencias_posibles = []
     etiquetas_detectadas.clear()
 
+    #buscar etiquetas sospechosas
     for clave, valor in metadata.items():
         if clave in etiquetas_excluidas:
             continue
@@ -127,8 +118,10 @@ def verificar_archivo_ia(metadata):
         aviso = "\nNo es posible confirmar generación por IA, pero contiene metadatos sospechosos."
         return None, f"{mensaje}{aviso}"
 
+    # resultado si no se encuentran coincidencias
     return False, "\nNo se encontraron patrones típicos de IA ni metadatos sospechosos."
 
+#funcion para detectar el modelo de generacion
 def detectar_modelo(metadata):
     for clave, valor in metadata.items():
         valor_str = str(valor).lower()
@@ -137,13 +130,16 @@ def detectar_modelo(metadata):
                 return nombre_modelo
     return "Desconocido"
 
+# funcion para detectar la aplicacion de generacion
 def detectar_aplicacion(metadata):
+    # buscar la aplicacion con etiquetas
     for clave, valor in metadata.items():
         valor_str = str(valor).lower()
         for etiqueta, aplicaciones in ETIQUETAS_APLICACION.items():
             if etiqueta.lower() in valor_str:
                 return aplicaciones if len(aplicaciones) > 1 else aplicaciones[0]
 
+    # buscar posibles aplicaciones con etiquetas sospechosas
     aplicaciones_posibles = set()
     for clave, valor in metadata.items():
         valor_str = str(valor).lower()
@@ -151,6 +147,7 @@ def detectar_aplicacion(metadata):
             if etiqueta.lower() in valor_str:
                 aplicaciones_posibles.update(aplicaciones)
 
+    # si no existen coincidencias 
     if not aplicaciones_posibles:
         return "Desconocido"
     elif len(aplicaciones_posibles) == 1:
@@ -158,7 +155,7 @@ def detectar_aplicacion(metadata):
     else:
         return list(aplicaciones_posibles)
 
-
+# Funciones para ejecutar analisis segun la extension
 
 def analizar_imagen(ruta_archivo):
     metadata = ejecutar_exiftool(ruta_archivo)
@@ -190,6 +187,7 @@ def analizar_pptx(ruta_archivo):
     es_ia, mensaje = verificar_archivo_ia(metadata)
     return metadata, es_ia, mensaje
 
+# Funcion que canaliza los analisis en funcion del tipo de extension del archivo
 def analizar_metadata_por_tipo(ruta_archivo):
     ext = ruta_archivo.lower().split('.')[-1]
     if ext in ["png", "jpg", "jpeg"]:

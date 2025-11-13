@@ -479,12 +479,11 @@ class DetectorArchivoGUI(QWidget):
         self._ventana_metadata.exec()
 
 
-
+    
     def exportar_reporte(self):
         if not self.metadata_completa:
             QMessageBox.warning(self, "Atención", "No hay metadata para exportar.")
             return
-
         # Usar función que busca todos los patrones sin límite
         es_ia, mensaje = verificar_archivo_ia(self.metadata_completa)
 
@@ -496,7 +495,6 @@ class DetectorArchivoGUI(QWidget):
                 if inicio > 0 and fin > inicio:
                     clave = linea[inicio:fin]
                     claves_resaltadas.add(clave)
-
         # Preguntar ruta y tipo de archivo para guardar
         ruta_guardar, filtro = QFileDialog.getSaveFileName(
             self,
@@ -539,5 +537,4 @@ class DetectorArchivoGUI(QWidget):
 
             with open(ruta_guardar, "w", encoding="utf-8") as f:
                 f.write(metadata_html)
-
         QMessageBox.information(self, "Éxito", f"Reporte guardado en:\n{ruta_guardar}")
