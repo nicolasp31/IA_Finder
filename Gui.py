@@ -259,15 +259,7 @@ class DetectorArchivoGUI(QWidget):
                 <li>IA Finder ejecutable (.exe).</li>
                 <li>No requiere instalación de Docker Desktop ni dependencias externas adicionales.</li>
                 <li>Permisos de lectura sobre los archivos a analizar.</li>
-                </ul>
-                <h3>¿No puedes usar IA Finder?</h3>
-                <p>Existe una versión alternativa:</p>
-                <ul>
-                <li>Descarga <a href="https://example.com/DetectorDeIA_Libre" target="_blank">DetectorDeIA_Libre</a>.</li>
-                <li>Descarga e instala correctamente Exiftool en tu sistema operativo, siguiendo las instrucciones en <a href="https://exiftool.org/install.html" target="_blank">https://exiftool.org/install.html</a>.</li>
-                <li>Ejecuta el archivo con doble clic.</li>
-                <li>Sigue las instrucciones del manual para aprender sobre todas las funciones.</li>
-                </ul>
+
             """,
             
         }
