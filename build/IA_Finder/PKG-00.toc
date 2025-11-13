@@ -1,4 +1,5 @@
-('C:\\Users\\Daniel\\IA_FINDER\\IA_Finder\\build\\IA_Finder\\IA_Finder.pkg',
+('C:\\Users\\Daniel\\IA_FINDER\\IA_Finder\\build\\IA_Finder\\Detector de '
+ 'IA.pkg',
  {'BINARY': True,
   'DATA': True,
   'EXECUTABLE': True,
