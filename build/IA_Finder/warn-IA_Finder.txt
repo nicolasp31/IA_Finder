@@ -14,7 +14,7 @@ Types if import:
 IMPORTANT: Do NOT post this list to the issue-tracker. Use it as a basis for
             tracking down the missing module yourself. Thanks!
 
-missing module named pyimod02_importers - imported by C:\Users\Daniel\IA_FINDER\IA_Finder\venv\Lib\site-packages\PyInstaller\hooks\rthooks\pyi_rth_pkgutil.py (delayed)
+missing module named pyimod02_importers - imported by C:\Users\usuario\Desktop\IA_Finder-v0.1\venv\Lib\site-packages\PyInstaller\hooks\rthooks\pyi_rth_pkgutil.py (delayed)
 missing module named pwd - imported by posixpath (delayed, conditional, optional), shutil (delayed, optional), tarfile (optional), pathlib._local (optional), subprocess (delayed, conditional, optional)
 missing module named grp - imported by shutil (delayed, optional), tarfile (optional), pathlib._local (optional), subprocess (delayed, conditional, optional)
 missing module named posix - imported by os (conditional, optional), posixpath (optional), shutil (conditional), importlib._bootstrap_external (conditional)
@@ -27,5 +27,5 @@ missing module named fcntl - imported by subprocess (optional)
 missing module named vms_lib - imported by platform (delayed, optional)
 missing module named 'java.lang' - imported by platform (delayed, optional)
 missing module named java - imported by platform (delayed)
-missing module named pantalla_carga - imported by C:\Users\Daniel\IA_FINDER\IA_Finder\IA_Finder.py (top-level)
-missing module named Gui - imported by C:\Users\Daniel\IA_FINDER\IA_Finder\IA_Finder.py (top-level)
+missing module named pantalla_carga - imported by C:\Users\usuario\Desktop\IA_Finder-v0.1\IA_Finder.py (top-level)
+missing module named Gui - imported by C:\Users\usuario\Desktop\IA_Finder-v0.1\IA_Finder.py (top-level)

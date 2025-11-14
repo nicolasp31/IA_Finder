@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton, QFileDialog, QVBoxLayout, QHBoxLayout,
     QTextEdit, QTableWidget, QTableWidgetItem, QTabWidget, QMenuBar, QProgressBar, QDialog, QMessageBox
 )
-from PyQt6.QtGui import QFont, QAction
+from PyQt6.QtGui import QFont, QAction, QPalette, QColor
 from PyQt6.QtCore import Qt
 from Worker import HiloMetadata
 from metadata_analisis import verificar_archivo_ia
@@ -17,6 +17,10 @@ class DetectorArchivoGUI(QWidget):
         super().__init__()
         self.setWindowTitle("Detector de archivos generados por IA")
         self.setMinimumSize(900, 680)
+        
+        # APLICAR ESTILO GLOBAL OSCURO A TODA LA APLICACIÓN
+        self.aplicar_tema_oscuro()
+        
         # Layout principal horizontal
         layout_principal = QHBoxLayout()
         # Menú superior
@@ -70,6 +74,126 @@ class DetectorArchivoGUI(QWidget):
 
         # Conectar cambio de pestaña para actualizar panel derecho
         self.pestanas.currentChanged.connect(self.actualizar_panel_derecho_por_pestana)
+
+    def aplicar_tema_oscuro(self):
+        """Aplica un tema oscuro consistente a toda la aplicación"""
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #2b2b2b;
+                color: #ffffff;
+            }
+            QLabel {
+                background-color: transparent;
+                color: #ffffff;
+            }
+            QPushButton {
+                background-color: #3d3d3d;
+                color: #ffffff;
+                border: 1px solid #555555;
+                padding: 6px 12px;
+                border-radius: 3px;
+            }
+            QPushButton:hover {
+                background-color: #4d4d4d;
+            }
+            QPushButton:pressed {
+                background-color: #2d2d2d;
+            }
+            QPushButton:disabled {
+                background-color: #2b2b2b;
+                color: #777777;
+            }
+            QTableWidget {
+                background-color: #1e1e1e;
+                alternate-background-color: #252525;
+                color: #ffffff;
+                gridline-color: #3d3d3d;
+                selection-background-color: #4d4d4d;
+                border: 1px solid #3d3d3d;
+            }
+            QTableWidget::item {
+                padding: 5px;
+            }
+            QHeaderView::section {
+                background-color: #3d3d3d;
+                color: #ffffff;
+                padding: 5px;
+                border: 1px solid #555555;
+                font-weight: bold;
+            }
+            QTextEdit {
+                background-color: #1e1e1e;
+                color: #ffffff;
+                border: 1px solid #3d3d3d;
+                selection-background-color: #4d4d4d;
+            }
+            QTabWidget::pane {
+                border: 1px solid #3d3d3d;
+                background-color: #2b2b2b;
+                top: -1px;
+            }
+            QTabBar::tab {
+                background-color: #3d3d3d;
+                color: #ffffff;
+                padding: 8px 16px;
+                margin-right: 2px;
+                border: 1px solid #3d3d3d;
+                border-bottom: none;
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+            }
+            QTabBar::tab:selected {
+                background-color: #2b2b2b;
+                border-bottom: 2px solid #2b2b2b;
+            }
+            QTabBar::tab:hover:!selected {
+                background-color: #4d4d4d;
+            }
+            QProgressBar {
+                background-color: #1e1e1e;
+                color: #ffffff;
+                border: 1px solid #3d3d3d;
+                border-radius: 3px;
+                text-align: center;
+                height: 20px;
+            }
+            QProgressBar::chunk {
+                background-color: #5cb85c;
+                border-radius: 2px;
+            }
+            QScrollBar:vertical {
+                background-color: #2b2b2b;
+                width: 12px;
+                border: none;
+            }
+            QScrollBar::handle:vertical {
+                background-color: #3d3d3d;
+                min-height: 20px;
+                border-radius: 6px;
+            }
+            QScrollBar::handle:vertical:hover {
+                background-color: #4d4d4d;
+            }
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                height: 0px;
+            }
+            QScrollBar:horizontal {
+                background-color: #2b2b2b;
+                height: 12px;
+                border: none;
+            }
+            QScrollBar::handle:horizontal {
+                background-color: #3d3d3d;
+                min-width: 20px;
+                border-radius: 6px;
+            }
+            QScrollBar::handle:horizontal:hover {
+                background-color: #4d4d4d;
+            }
+            QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+                width: 0px;
+            }
+        """)
 
     def inicializar_menu(self):
         menu_archivo = self.barra_menu.addMenu("Archivo")
@@ -238,7 +362,7 @@ class DetectorArchivoGUI(QWidget):
             """,
             "sobre": """
                 <h2>Sobre Detector de IA</h2>
-                <p>La aplicación IA Finder es una herramienta desarrollada en Python utilizando las librerías Exiftool y PyQt6. Su propósito es analizar la metadata de diversos tipos de archivos digitales y determinar si estos fueron generados o manipulados por sistemas de Inteligencia Artificial (IA). Este software contribuye a la verificación de autenticidad de documentos y materiales digitales en entornos académicos e investigativos.</p>
+                <p>La aplicación IA Finder es una herramienta desarrollada en Python utilizando las librerías Exiftool y PyQt6. Su propósito es analizar la metadata de diversos tipos de archivos digitales y determinar si estos fueron generados o manipulados por sistemas de Inteligencia Artificial (IA). Este software contribuye a la verificación de autenticidad de documentos y materiales digitales en entornos académicos e investigativos.</p>
 
                 <p>Ha sido desarrollado en el semillero UPS de la Universidad de Cundinamarca por Daniel Felipe Venegas Vargas y Nicolas Prieto. El objetivo principal es detectar patrones de IA en archivos buscando evidencias de ser generados por IA, siendo útil en la verificación de autenticidad de archivos, así como trabajos de investigación en torno a metadatos.</p>
                 <p>Además, es una herramienta de fácil mantenimiento, de uso libre y código abierto con el propósito de fortalecer la investigación de patrones de metadatos en archivos generados por IA y la democratización de herramientas de este tipo.</p>
@@ -462,6 +586,30 @@ class DetectorArchivoGUI(QWidget):
         self._ventana_metadata = QDialog(self)
         self._ventana_metadata.setWindowTitle("Metadata completa")
         self._ventana_metadata.setFixedSize(800, 600)
+        
+        # Aplicar tema oscuro al diálogo
+        self._ventana_metadata.setStyleSheet("""
+            QDialog {
+                background-color: #2b2b2b;
+            }
+            QTextEdit {
+                background-color: #1e1e1e;
+                color: #ffffff;
+                border: 1px solid #3d3d3d;
+            }
+            QScrollBar:vertical {
+                background-color: #2b2b2b;
+                width: 12px;
+            }
+            QScrollBar::handle:vertical {
+                background-color: #3d3d3d;
+                border-radius: 6px;
+            }
+            QScrollBar::handle:vertical:hover {
+                background-color: #4d4d4d;
+            }
+        """)
+        
         layout = QVBoxLayout()
         txt = QTextEdit()
         txt.setHtml(metadata_html)
